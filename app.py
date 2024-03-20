@@ -22,6 +22,10 @@ def download_audio(url, audio_name):
         ydl.download([url])
     return
 
+def demucs_function(audio_input):
+    command = f"demucs --two-stems=vocals {audio_input}"
+    result = subprocess.run(command.split(), stdout=subprocess.PIPE)
+    return result.stdout.decode()
 
 
 with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_hue="zinc")) as app:
@@ -178,13 +182,20 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                     outputs=[spk_item, protect0, protect0, file_index2, file_index2],
                     api_name="infer_change_voice",
                 )
-        with gr.TabItem("Download acapella"):
+        with gr.TabItem("Download song"):
             with gr.Row():
                 url = gr.Textbox(label="url to yotube link.")
                 audio_name = gr.Textbox(label="file name.")
                 output_audio2 = gr.Textbox(label="output")
                 dwnl_button = gr.Button("Download")
                 dwnl_button.click(fn=download_audio,inputs=[url,audio_name],outputs=[output_audio2])
+        with gr.TabItem("Separate vocal and instrumental"):
+             with gr.Row():
+                paths_for_files = lambda path:[os.path.abspath(os.path.join(path, f)) for f in os.listdir(path) if os.path.splitext(f)[1].lower() in ('.mp3', '.wav', '.flac', '.ogg')]
+                input_audio = gr.Dropdown(label="Input Path", value=paths_for_files('audios')[0] if len(paths_for_files('audios')) > 0 else '', choices=paths_for_files('audios'), allow_custom_value=True)
+                output_audio3 = gr.Textbox(label="output")
+                dwnl_button = gr.Button("Download")
+                dwnl_button.click(fn=demucs_function,inputs=[input_audio],outputs=[output_audio3])
         with gr.TabItem("Download Models"):
             with gr.Row():
                 url_input = gr.Textbox(label="URL to model", value="",placeholder="https://...", scale=6)
