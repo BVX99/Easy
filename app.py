@@ -71,10 +71,6 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                             outputs=[audio_player],
                             fn=lambda path: {"value":path,"__type__":"update"} if os.path.exists(path) else None
                         )
-                        dropbox.upload(
-                            fn=lambda audio:audio.name,
-                            inputs=[dropbox], 
-                            outputs=[input_audio0])
                 with gr.Column():
                     with gr.Accordion("Change Index", open=False):
                         file_index2 = gr.Dropdown(
