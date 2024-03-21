@@ -52,21 +52,8 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                     with gr.Row():
                        url = gr.Textbox(label="url to yotube link.")
                        audio_name = gr.Textbox(label="file name.")
-                       audio_path23 = lambda path:[os.path.abspath(os.path.join(path, f)) for f in os.listdir(path) if os.path.splitext(f)[1].lower() in ('.mp3', '.wav', '.flac', '.ogg')]
-                            input_audio0 = gr.Dropdown(
-                            label="Input Path",
-                            value=paths_for_files('audios')[0] if len(paths_for_files('audios')) > 0 else '',
-                            choices=paths_for_files('audios'), # Only show absolute paths for audio files ending in .mp3, .wav, .flac or .ogg
-                            allow_custom_value=True
-                        )
-                        audio_player = gr.Audio()
-                        input_audio0.change(
-                            inputs=[audio_path23],
-                            outputs=[audio_player],
-                            fn=lambda path: {"value":path,"__type__":"update"} if os.path.exists(path) else None
-                        )
                        dwnl_button = gr.Button("Download")
-                       dwnl_button.click(fn=download_audio,inputs=[url,audio_name],outputs=[audio_path23])
+                       dwnl_button.click(fn=download_audio,inputs=[url,audio_name],outputs=[url])
                        
                     with gr.Row():
                         paths_for_files = lambda path:[os.path.abspath(os.path.join(path, f)) for f in os.listdir(path) if os.path.splitext(f)[1].lower() in ('.mp3', '.wav', '.flac', '.ogg')]
@@ -102,9 +89,9 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                     with gr.Accordion("General Settings", open=False):
                         f0method0 = gr.Radio(
                             label="Method",
-                            choices=["pm", "harvest", "crepe", "rmvpe"]
+                            choices=["crepe", "rmvpe"]
                             if config.dml == False
-                            else ["pm", "harvest", "rmvpe"],
+                            else [ "rmvpe"],
                             value="rmvpe",
                             interactive=True,
                         )
@@ -163,7 +150,7 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                         outputs = [input_audio0],   
                     )
             with gr.Row():
-                f0_file = gr.File(label="F0 Path", visible=False)
+                f0_file = gr.File(label="F0 Path") #, visible=False
             with gr.Row():
                 vc_output1 = gr.Textbox(label="Information", placeholder="Welcome!",visible=False)
                 but0.click(
