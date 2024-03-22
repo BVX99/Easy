@@ -1,7 +1,8 @@
 from original import *
 import shutil, glob
 import yt_dlp
-
+import hopsworks
+import subprocess
 
 from easyfuncs import download_from_url, CachedModels
 os.makedirs("dataset",exist_ok=True)
@@ -23,6 +24,16 @@ def download_audio(url, audio_name):
     return
 
 
+def vocal_remove(audio):    
+    project = hopsworks.login()
+    mr = project.get_model_registry()
+    # model = mr.get_best_model("vocal_remover", "validation_loss", "min")
+    model = mr.get_model("vocal_remover", version=3)
+    model_path = model.download()
+    model_path_pth = model_path + "/vocal_model.pth"
+    # print("model_path: ", model_path)s
+    subprocess.run(["python3", "inference.py", "--input", {input_audio0}, "--pretrained_model", model_path_pth, "--output_dir", "./"])
+    return "./Instruments.wav"
 
 
 with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_hue="zinc")) as app:
@@ -53,7 +64,7 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                        url = gr.Textbox(label="url to yotube link.")
                        audio_name = gr.Textbox(label="file name.")
                        dwnl_button = gr.Button("Download")
-                       dwnl_button.click(fn=download_audio,inputs=[url,audio_name],outputs=[url])
+                       dwnl_button.click(fn=download_audio,inputs=[audio_name],outputs=[url])
                        
                     with gr.Row():
                         paths_for_files = lambda path:[os.path.abspath(os.path.join(path, f)) for f in os.listdir(path) if os.path.splitext(f)[1].lower() in ('.mp3', '.wav', '.flac', '.ogg')]
@@ -70,6 +81,8 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                             outputs=[audio_player],
                             fn=lambda path: {"value":path,"__type__":"update"} if os.path.exists(path) else None
                         )
+                         dwnl_button = gr.Button("vocal_remove")
+                         dwnl_button.click(fn=vocal_remove,inputs=[input_audio0],outputs=[url])
                 with gr.Column():
                     with gr.Accordion("Change Index", open=False):
                         file_index2 = gr.Dropdown(
