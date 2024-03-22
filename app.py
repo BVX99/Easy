@@ -79,8 +79,8 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                         input_audio0.change(
                             inputs=[input_audio0],
                             outputs=[audio_player],
-                            fn=lambda path: {"value":path,"__type__":"update"} if os.path.exists(path) else None
-                            dwnl_button = gr.Button("vocal_remove")
+                            fn=lambda path: {"value":path,"__type__":"update"} if os.path.exists(path) else None,
+                            dwnl_button = gr.Button("vocal_remove"),
                             dwnl_button.click(fn=vocal_remove,inputs=[input_audio0],outputs=[url])
                         )
                          
