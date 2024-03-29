@@ -82,8 +82,7 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                             fn=lambda path: {"value":path,"__type__":"update"} if os.path.exists(path) else None,
                             dwnl_button = gr.Button("vocal_remove"),
                             dwnl_button.click(fn=vocal_remove,inputs=[input_audio0],outputs=[url])
-                        )
-                         
+                        )               
                 with gr.Column():
                     with gr.Accordion("Change Index", open=False):
                         file_index2 = gr.Dropdown(
