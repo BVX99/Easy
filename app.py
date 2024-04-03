@@ -24,16 +24,7 @@ def download_audio(url, audio_name):
     return "outtmpl"
 
 
-def vocal_remove(audio):    
-    project = hopsworks.login()
-    mr = project.get_model_registry()
-    # model = mr.get_best_model("vocal_remover", "validation_loss", "min")
-    model = mr.get_model("vocal_remover", version=3)
-    model_path = model.download()
-    model_path_pth = model_path + "/vocal_model.pth"
-    # print("model_path: ", model_path)s
-    subprocess.run(["python3", "inference.py", "--input", {input_audio0}, "--pretrained_model", model_path_pth, "--output_dir", "./"])
-    return "./Instruments.wav"
+
 
 
 with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_hue="zinc")) as app:
