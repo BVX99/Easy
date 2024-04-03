@@ -21,7 +21,7 @@ def download_audio(url, audio_name):
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-    return
+    return "outtmpl"
 
 
 def vocal_remove(audio):    
@@ -191,13 +191,13 @@ with gr.Blocks(title="🔊",theme=gr.themes.Base(primary_hue="emerald",neutral_h
                     outputs=[spk_item, protect0, protect0, file_index2, file_index2],
                     api_name="infer_change_voice",
                 )
-   #     with gr.TabItem("Download song"):
-   #         with gr.Row():
-   #             url = gr.Textbox(label="url to yotube link.")
-   #             audio_name = gr.Textbox(label="file name.")
-   #             output_audio2 = gr.Audio(label="output")
-   #             dwnl_button = gr.Button("Download")
-   #             dwnl_button.click(fn=download_audio,inputs=[url,audio_name],outputs=[output_audio2])
+        with gr.TabItem("Download song"):
+            with gr.Row():
+                url = gr.Textbox(label="url to yotube link.")
+                audio_name = gr.Textbox(label="file name.")
+                output_audio2 = gr.Audio(label="output")
+                dwnl_button = gr.Button("Download")
+                dwnl_button.click(fn=download_audio,inputs=[url,audio_name],outputs=[output_audio2])
         
         with gr.TabItem("Download Models"):
             with gr.Row():
